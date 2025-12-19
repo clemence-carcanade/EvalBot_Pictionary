@@ -49,7 +49,7 @@ main_loop
 		bne wait
 		
 		;; ===== CORRECTION : Un seul appel =====
-		bl  DESSINER_CARRE			; ? Juste ça suffit !
+		bl  DESSINER_MAISON
 		
 wait
 		bl  SWITCH_TOP
@@ -68,16 +68,16 @@ start_blink
 		b   main_loop
 
 ;;============================================================================
-;; DESSINER_CARRE (CORRIGÉ)
+;; DESSINER_MAISON
 ;;============================================================================
-DESSINER_CARRE
+DESSINER_MAISON
 		PUSH {R4, LR}				; Sauvegarder
 		
-		MOV R4, #4					; 4 côtés
+		MOV R4, #3
 		
-BOUCLE_CARRE
+BOUCLE_MAISON
 		CMP R4, #0
-		BEQ FIN_CARRE				; Si fini, sortir
+		BEQ BOUCLE_TOIT				; Si fini, sortir
 		
 		MOV R0, #10
 		BL AVANCER_NCM
@@ -85,9 +85,25 @@ BOUCLE_CARRE
 		BL TOURNER_90_DROITE
 		
 		SUB R4, R4, #1
-		B BOUCLE_CARRE
+		B BOUCLE_MAISON
+
+BOUCLE_TOIT
+	MOV R0, #10
+	BL AVANCER_NCM
 		
-FIN_CARRE							; ? FIN_CARRE est ICI !
+	BL TOURNER_45_DROITE
+	
+	MOV R0, #10
+	BL AVANCER_NCM
+	
+	
+	BL TOURNER_90_DROITE
+	MOV R0, #10
+	BL AVANCER_NCM
+	
+	BL FIN_MAISON
+	
+FIN_MAISON							; ? FIN_CARRE est ICI !
 		POP {R4, PC}				; ? POP est ICI !
 
 ;;============================================================================
@@ -145,6 +161,22 @@ TOURNER_90_DROITE
 		BL MOTEUR_GAUCHE_AVANT
 		
 		mov r0, #2500
+		bl  DELAY_MS
+		
+		BL MOTEUR_GAUCHE_OFF
+		
+		POP {R0, PC}
+		
+;;============================================================================
+;; TOURNER_125_DROITE
+;;============================================================================
+TOURNER_45_DROITE
+		PUSH {R0, LR}
+		
+		BL MOTEUR_GAUCHE_ON
+		BL MOTEUR_GAUCHE_AVANT
+		
+		mov r0, #1150
 		bl  DELAY_MS
 		
 		BL MOTEUR_GAUCHE_OFF
