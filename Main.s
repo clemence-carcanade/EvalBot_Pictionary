@@ -27,15 +27,15 @@ __main
         bl  SWITCH_INIT
 		bl  MOTEUR_INIT
 		
-		;; === TEST DIAGNOSTIC : Décommentez pour tester ===
+		;; === TEST DIAGNOSTIC : DÃ©commentez pour tester ===
 		;; bl TEST_ROTATION
 		
 		mov r9, #0x00
 		
 		;;Configurer un registre qui retient 4 (nombre de fois que la fonction devra tourner)
 		;;Configurer un index qui augmente
-		;;Comparer si c'est égal à 4 sinon continuer
-		;;Ajouter un à l'index
+		;;Comparer si c'est Ã©gal Ã  4 sinon continuer
+		;;Ajouter un Ã  l'index
 
 ;;------------BOUCLE PRINCIPALE-----------------
 main_loop
@@ -168,7 +168,7 @@ TOURNER_90_DROITE
 		POP {R0, PC}
 		
 ;;============================================================================
-;; TOURNER_125_DROITE
+;; TOURNER_45_DROITE
 ;;============================================================================
 TOURNER_45_DROITE
 		PUSH {R0, LR}
