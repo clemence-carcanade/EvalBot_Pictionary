@@ -399,6 +399,16 @@
               <FileType>2</FileType>
               <FilePath>.\Main.s</FilePath>
             </File>
+            <File>
+              <FileName>Config_Bumper.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\Config_Bumper.s</FilePath>
+            </File>
+            <File>
+              <FileName>Config_Moteur.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\Projet\Config_Moteur.s</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
