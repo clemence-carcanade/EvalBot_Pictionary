@@ -159,6 +159,7 @@ bl_wait_off
 
         subs r4, #1
         bne bl_blink_loop
+		bl LED_BACK_LEFT_OFF
 
         BX  LR
 
