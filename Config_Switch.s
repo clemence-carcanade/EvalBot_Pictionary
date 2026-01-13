@@ -23,8 +23,8 @@ SWITCH_INIT
 		
 ;; Enable the Port D peripheral clock
 	ldr r1, = SYSCTL_PERIPH_GPIO  			;; RCGC2
-	ldr r0, [r1]  					;; Enable clock on GPIO D
-	ORR r0, r0, #0x00000008
+	ldr r0, [r1]  							;; Enable clock on GPIO D
+	ORR r0, r0, #0x00000008					;; OU logique binaire pour additionner à l'horloge
 	str r0, [r1]
 	
 ;; "There must be a delay of 3 system clocks before any GPIO reg. access  (p413 datasheet de lm3s9B92.pdf)

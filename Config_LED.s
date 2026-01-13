@@ -29,21 +29,24 @@ DUREE_LONG   			EQU     0x0028FFFF
 		EXPORT LEDS_OFF
 		EXPORT LED_FRONT_RIGHT_ON
 		EXPORT LED_FRONT_RIGHT_OFF
+		EXPORT LED_FRONT_RIGHT_BLINK
 		EXPORT LED_FRONT_LEFT_ON
 		EXPORT LED_FRONT_LEFT_OFF
+		EXPORT LED_FRONT_LEFT_BLINK
 		EXPORT LED_BACK_RIGHT_ON
 		EXPORT LED_BACK_RIGHT_OFF
+		EXPORT LED_BACK_RIGHT_BLINK
 		EXPORT LED_BACK_LEFT_ON
 		EXPORT LED_BACK_LEFT_OFF
-		EXPORT LED_BACK_LEFT_BLINK_3
+		EXPORT LED_BACK_LEFT_BLINK
 			
 ;;------------INITIALISATION-----------------
 LEDS_INIT
 
 ;; Enable the Port F peripheral clock
 		ldr r1, = SYSCTL_PERIPH_GPIO  			;; RCGC2
-        ldr r0, [r1]
-		ORR r0, r0, #0x00000020  				;; Enable clock on GPIO F with logic OR
+        ldr r0, [r1]							;; Enable clock on GPIO F
+		ORR r0, r0, #0x00000020  				;; OU logique binaire pour additionner à l'horloge
         str r0, [r1]
 		
 ;; "There must be a delay of 3 system clocks before any GPIO reg. access  (p413 datasheet de lm3s9B92.pdf)
@@ -102,6 +105,27 @@ LED_FRONT_RIGHT_OFF
 		ldr r1, = GPIO_PORTF_BASE + (BROCHE4<<2)
         str r0, [r1]
         BX  LR
+
+LED_FRONT_RIGHT_BLINK
+		mov r10, lr
+        mov r4, #3
+fr_blink_loop
+        bl  LED_FRONT_RIGHT_ON
+        ldr r0, =DUREE_LONG
+fr_wait_on
+        subs r0, #1
+        bne fr_wait_on
+
+        bl  LED_FRONT_RIGHT_OFF
+        ldr r0, =DUREE_LONG
+fr_wait_off
+        subs r0, #1
+        bne fr_wait_off
+
+        subs r4, #1
+        bne fr_blink_loop
+		mov lr, r10
+        BX  LR
 		
 ;;------------LED AVANT GAUCHE-----------------
 LED_FRONT_LEFT_ON
@@ -114,6 +138,27 @@ LED_FRONT_LEFT_OFF
         mov r0, #0x00
 		ldr r1, = GPIO_PORTF_BASE + (BROCHE5<<2)
         str r0, [r1]
+        BX  LR
+		
+LED_FRONT_LEFT_BLINK
+		mov r10, lr
+        mov r4, #3
+fl_blink_loop
+        bl  LED_FRONT_LEFT_ON
+        ldr r0, =DUREE_LONG
+fl_wait_on
+        subs r0, #1
+        bne fl_wait_on
+
+        bl  LED_FRONT_LEFT_OFF
+        ldr r0, =DUREE_LONG
+fl_wait_off
+        subs r0, #1
+        bne fl_wait_off
+
+        subs r4, #1
+        bne fl_blink_loop
+		mov lr, r10
         BX  LR
 		
 ;;------------LED ARRIERE DROITE-----------------
@@ -129,6 +174,27 @@ LED_BACK_RIGHT_OFF
         str r0, [r1]
         BX  LR
 		
+LED_BACK_RIGHT_BLINK
+		mov r10, lr
+        mov r4, #3
+br_blink_loop
+        bl  LED_BACK_RIGHT_ON
+        ldr r0, =DUREE_LONG
+br_wait_on
+        subs r0, #1
+        bne br_wait_on
+
+        bl  LED_BACK_RIGHT_OFF
+        ldr r0, =DUREE_LONG
+br_wait_off
+        subs r0, #1
+        bne br_wait_off
+
+        subs r4, #1
+        bne br_blink_loop
+		mov lr, r10
+        BX  LR
+		
 ;;------------LED ARRIERE GAUCHE-----------------
 LED_BACK_LEFT_ON
         mov r0, #0x00
@@ -142,15 +208,16 @@ LED_BACK_LEFT_OFF
         str r0, [r1]
         BX  LR
 		
-LED_BACK_LEFT_BLINK_3
-        mov r4, #3              ;; compteur de clignotements
+LED_BACK_LEFT_BLINK
+		mov r10, lr
+        mov r4, #3
 bl_blink_loop
         bl  LED_BACK_LEFT_ON
         ldr r0, =DUREE_LONG
 bl_wait_on
         subs r0, #1
         bne bl_wait_on
-		
+
         bl  LED_BACK_LEFT_OFF
         ldr r0, =DUREE_LONG
 bl_wait_off
@@ -159,10 +226,8 @@ bl_wait_off
 
         subs r4, #1
         bne bl_blink_loop
-		bl LED_BACK_LEFT_OFF
-
+		mov lr, r10
         BX  LR
-
 
 ;;------------ETEINDRE----------------- 
 LEDS_OFF
